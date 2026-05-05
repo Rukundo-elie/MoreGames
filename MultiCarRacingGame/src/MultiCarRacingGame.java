@@ -314,7 +314,7 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
         gameOver = false;
         raceStartTime = System.currentTimeMillis();
 
-        playBackgroundMusic("src/music.wav");
+        playBackgroundMusic("/music.wav");
 
         // Create thread pool for all cars
         raceExecutor = Executors.newFixedThreadPool(cars.size());
@@ -414,7 +414,7 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
                     startButton.setEnabled(true);
                     raceExecutor.shutdownNow();
                     stopBackgroundMusic();
-                    playSoundEffect("src/crash.wav");
+                    playSoundEffect("/crash.wav");
                     return;
                 }
             }
@@ -454,20 +454,20 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
         }
     }
 
-    private void playBackgroundMusic(String filePath) {
+    private void playBackgroundMusic(String resourcePath) {
         try {
-            File musicPath = new File(filePath);
-            if (musicPath.exists()) {
+            java.net.URL musicUrl = getClass().getResource(resourcePath);
+            if (musicUrl != null) {
                 if (backgroundMusic != null && backgroundMusic.isRunning()) {
                     backgroundMusic.stop();
                 }
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicUrl);
                 backgroundMusic = AudioSystem.getClip();
                 backgroundMusic.open(audioInput);
                 backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
                 backgroundMusic.start();
             } else {
-                addMessage("🎵 Tip: Add a 'music.wav' file to the 'src' folder to hear music!");
+                addMessage("🎵 Tip: Could not find music at " + resourcePath);
             }
         } catch (Exception e) {
             System.out.println("Error playing music: " + e.getMessage());
@@ -480,11 +480,11 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
         }
     }
 
-    private void playSoundEffect(String filePath) {
+    private void playSoundEffect(String resourcePath) {
         try {
-            File soundPath = new File(filePath);
-            if (soundPath.exists()) {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(soundPath);
+            java.net.URL soundUrl = getClass().getResource(resourcePath);
+            if (soundUrl != null) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(soundUrl);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
                 clip.start();
@@ -769,7 +769,7 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
                 if (playerCar != null && !gameOver && !racePaused) {
                     playerCar.boostRemaining = 20;
                     addMessage("🏎️ BOOST ACTIVATED! 🏎️");
-                    playSoundEffect("src/boost.wav");
+                    playSoundEffect("/boost.wav");
                 }
             }
         });
