@@ -358,6 +358,7 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
             raceExecutor.shutdownNow();
         }
         initGame();
+        raceStartTime = 0;
         repaint();
         addMessage("Game Reset! Press Start Race to begin.");
         statusLabel.setText("🏁 Ready to Race! 🏁");
@@ -597,6 +598,45 @@ public class MultiCarRacingGame extends JPanel implements Runnable {
             
             g2d.setColor(Color.YELLOW);
             g2d.drawString(scoreText, (WIDTH - fmScore.stringWidth(scoreText)) / 2, HEIGHT / 2 + 40);
+        }
+
+        // Draw instructions overlay if race hasn't started
+        if (raceStartTime == 0) {
+            g2d.setColor(new Color(0, 0, 0, 200)); 
+            g2d.fillRect(0, 0, WIDTH, HEIGHT);
+            
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(new Font("Arial", Font.BOLD, 40));
+            String title = "🏎️ WELCOME TO MULTI-CAR RACING 🏎️";
+            FontMetrics fmTitle = g2d.getFontMetrics();
+            g2d.drawString(title, (WIDTH - fmTitle.stringWidth(title)) / 2, HEIGHT / 2 - 100);
+            
+            g2d.setColor(Color.YELLOW);
+            g2d.setFont(new Font("Arial", Font.BOLD, 24));
+            String inst1 = "HOW TO PLAY & GET A HIGH SCORE:";
+            FontMetrics fmInst = g2d.getFontMetrics();
+            g2d.drawString(inst1, (WIDTH - fmInst.stringWidth(inst1)) / 2, HEIGHT / 2 - 40);
+            
+            g2d.setColor(Color.WHITE);
+            g2d.setFont(new Font("Arial", Font.PLAIN, 20));
+            String[] instructions = {
+                "• Use UP and DOWN arrow keys to change lanes and dodge traffic.",
+                "• Press RIGHT arrow to use NOS BOOST for extra speed!",
+                "• Press LEFT arrow to brake and avoid collisions.",
+                "• Survive as long as possible without crashing to get a HIGH SCORE.",
+                "• The game gets faster and harder as you play!"
+            };
+            
+            int yPos = HEIGHT / 2 + 10;
+            for (String inst : instructions) {
+                g2d.drawString(inst, (WIDTH - g2d.getFontMetrics().stringWidth(inst)) / 2, yPos);
+                yPos += 30;
+            }
+            
+            g2d.setColor(Color.GREEN);
+            g2d.setFont(new Font("Arial", Font.BOLD, 24));
+            String inst6 = ">>> CLICK 'Start Race' TO BEGIN! <<<";
+            g2d.drawString(inst6, (WIDTH - g2d.getFontMetrics().stringWidth(inst6)) / 2, yPos + 20);
         }
     }
 
